@@ -1,0 +1,87 @@
+;
+; CovertBypass.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Sample ; TODO: edit Class
+ClassGuid={78A1C341-4539-11d3-B88D-00C04FAD5171} ; TODO: edit ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=CovertBypass.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+PnpLockDown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+CovertBypass_Device_CoInstaller_CopyFiles = 11
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=SampleClassReg
+
+[SampleClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+CovertBypass.sys  = 1,,
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%CovertBypass.DeviceDesc%=CovertBypass_Device, Root\CovertBypass ; TODO: edit hw-id
+
+[CovertBypass_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+CovertBypass.sys
+
+;-------------- Service installation
+[CovertBypass_Device.NT.Services]
+AddService = CovertBypass,%SPSVCINST_ASSOCSERVICE%, CovertBypass_Service_Inst
+
+; -------------- CovertBypass driver install sections
+[CovertBypass_Service_Inst]
+DisplayName    = %CovertBypass.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\CovertBypass.sys
+
+;
+;--- CovertBypass_Device Coinstaller installation ------
+;
+
+[CovertBypass_Device.NT.CoInstallers]
+AddReg=CovertBypass_Device_CoInstaller_AddReg
+CopyFiles=CovertBypass_Device_CoInstaller_CopyFiles
+
+[CovertBypass_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[CovertBypass_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[CovertBypass_Device.NT.Wdf]
+KmdfService =  CovertBypass, CovertBypass_wdfsect
+[CovertBypass_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+ClassName="Samples" ; TODO: edit ClassName
+DiskName = "CovertBypass Installation Disk"
+CovertBypass.DeviceDesc = "CovertBypass Device"
+CovertBypass.SVCDESC = "CovertBypass Service"

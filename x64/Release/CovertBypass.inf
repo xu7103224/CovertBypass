@@ -1,0 +1,91 @@
+;
+; CovertBypass.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Sample ; TODO: edit Class
+ClassGuid={78A1C341-4539-11d3-B88D-00C04FAD5171} ; TODO: edit ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=CovertBypass.cat
+DriverVer = 08/31/2022,0.35.41.179
+PnpLockDown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+CovertBypass_Device_CoInstaller_CopyFiles = 11
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=SampleClassReg
+
+[SampleClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+CovertBypass.sys  = 1,,
+;
+
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64
+
+[Standard.NTamd64]
+%CovertBypass.DeviceDesc%=CovertBypass_Device, Root\CovertBypass ; TODO: edit hw-id
+
+[CovertBypass_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+CovertBypass.sys
+
+;-------------- Service installation
+[CovertBypass_Device.NT.Services]
+AddService = CovertBypass,%SPSVCINST_ASSOCSERVICE%, CovertBypass_Service_Inst
+
+; -------------- CovertBypass driver install sections
+[CovertBypass_Service_Inst]
+DisplayName    = %CovertBypass.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\CovertBypass.sys
+
+;
+;--- CovertBypass_Device Coinstaller installation ------
+;
+
+[CovertBypass_Device.NT.CoInstallers]
+AddReg=CovertBypass_Device_CoInstaller_AddReg
+CopyFiles=CovertBypass_Device_CoInstaller_CopyFiles
+
+[CovertBypass_Device_CoInstaller_AddReg]
+;
+
+
+[CovertBypass_Device_CoInstaller_CopyFiles]
+;
+
+
+[CovertBypass_Device.NT.Wdf]
+KmdfService =  CovertBypass, CovertBypass_wdfsect
+[CovertBypass_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+ClassName="Samples" ; TODO: edit ClassName
+DiskName = "CovertBypass Installation Disk"
+CovertBypass.DeviceDesc = "CovertBypass Device"
+CovertBypass.SVCDESC = "CovertBypass Service"
+

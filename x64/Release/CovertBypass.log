@@ -1,0 +1,22 @@
+﻿  Building 'CovertBypass' with toolset 'WindowsKernelModeDriver10.0' and the 'Universal' target platform.
+  Stamping x64\Release\CovertBypass.inf
+  Stamping [Version] section with DriverVer=08/31/2022,0.35.41.179
+  be.cpp
+  bypass.cpp
+  Generating Code...
+  Compiling...
+  eac.c
+  entry.c
+  eos.c
+  hook.c
+  Generating Code...
+  Compiling...
+  memory.cpp
+  platform.cpp
+  ricochet.cpp
+  Generating Code...
+  CovertBypass.vcxproj -> G:\Programming\CovertClub\CovertSDK\x64\Release\CovertBypass.sys
+  Done Adding Additional Store
+  Successfully signed: G:\Programming\CovertClub\CovertSDK\x64\Release\CovertBypass.sys
+  
+  Driver is 'Universal'.
